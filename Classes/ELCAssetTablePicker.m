@@ -27,6 +27,7 @@
     [tempArray release];
 	
 	UIBarButtonItem *doneButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)] autorelease];
+    
 	[self.navigationItem setRightBarButtonItem:doneButtonItem];
 	[self.navigationItem setTitle:@"Loading..."];
 
@@ -34,7 +35,14 @@
     
     // Show partial while full list loads
 	[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:.5];
+    
+    activityView = nil;
+    activityHolderView = nil;
+
+
+    
 }
+
 
 -(void)preparePhotos {
     
@@ -42,6 +50,17 @@
 
 	
     NSLog(@"enumerating photos");
+//    void (^enumerateAsset)(ALAsset *, NSUInteger , BOOL *) = ^(ALAsset *result, NSUInteger index, BOOL *stop){
+//        if(result == nil) 
+//        {
+//            return;
+//        }
+//        
+//        ELCAsset *elcAsset = [[[ELCAsset alloc] initWithAsset:result] autorelease];
+//        [elcAsset setParent:self];
+//        [self.elcAssets addObject:elcAsset];
+//    };
+//    [self.assetGroup enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:enumerateAsset];
     [self.assetGroup enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) 
      {         
          if(result == nil) 
@@ -53,17 +72,21 @@
          [elcAsset setParent:self];
          [self.elcAssets addObject:elcAsset];
      }];    
+
     NSLog(@"done enumerating photos");
 	
 	[self.tableView reloadData];
+//    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:([self.tableView numberOfRowsInSection:0] - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:TRUE];
 	[self.navigationItem setTitle:@"Pick Photos"];
-    
+
     [pool release];
 
 }
 
 - (void) doneAction:(id)sender {
-	
+    NSThread *progressThread = [[NSThread alloc]initWithTarget:self selector:@selector(showProgress) object:nil];
+    [progressThread start];
+    
 	NSMutableArray *selectedAssetsImages = [[[NSMutableArray alloc] init] autorelease];
 	    
 	for(ELCAsset *elcAsset in self.elcAssets) 
@@ -75,6 +98,32 @@
 	}
         
     [(ELCAlbumPickerController*)self.parent selectedAssets:selectedAssetsImages];
+    
+    [progressThread release];
+    [activityView stopAnimating];
+    [activityHolderView removeFromSuperview];
+    
+}
+
+- (void)showProgress{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc]init];
+    
+    if (activityHolderView == nil) {
+        activityHolderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 480)];
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(103, 190, 115, 101)];
+        [imageView setImage:[UIImage imageNamed:@"loadingBack.png"]];
+        [activityHolderView addSubview:imageView];
+        [imageView release];
+    }
+    if (activityView == nil) {
+        activityView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [activityView setFrame:CGRectMake(136, 203, 50, 50)];
+    }
+    [activityView startAnimating];
+    [activityHolderView addSubview:activityView];
+    [self.navigationController.navigationBar addSubview:activityHolderView];
+    
+    [pool drain];
 }
 
 #pragma mark UITableViewDataSource Delegate Methods
@@ -171,6 +220,8 @@
 {
     [elcAssets release];
     [selectedAssetsLabel release];
+    activityView = nil;
+    activityHolderView = nil;
     [super dealloc];    
 }
 

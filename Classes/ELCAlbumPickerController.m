@@ -9,6 +9,8 @@
 #import "ELCImagePickerController.h"
 #import "ELCAssetTablePicker.h"
 
+
+
 @implementation ELCAlbumPickerController
 
 @synthesize parent, assetGroups;
@@ -18,8 +20,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    albumLoaded = FALSE;
 	
 	[self.navigationItem setTitle:@"Loading..."];
+    
 
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self.parent action:@selector(cancelImagePicker)];
 	[self.navigationItem setRightBarButtonItem:cancelButton];
@@ -36,43 +41,110 @@
     {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
+        
+        
         // Group enumerator Block
         void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
         {
             if (group == nil) 
             {
+
+                // Reload albums
+
                 return;
             }
-            
-            [self.assetGroups addObject:group];
+            NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:2];
+            [dic setObject:group forKey:@"group"];
+            NSString *name = [[group valueForProperty:ALAssetsGroupPropertyName] lowercaseString];
+            if ([name isEqualToString:@"saved photos"]) {
+                name = @"-3";
+            }else if ([name isEqualToString:@"camera roll"]){
+                name = @"-2";
+            }else if ([name isEqualToString:@"photo library"]){
+                name = @"-1";
+            }else {
+                name = [NSString stringWithFormat:@"0%@",name];
+            }
+            [dic setObject:name forKey:@"name"];
+            [self.assetGroups addObject:dic];
+            [dic release];
 
-            // Reload albums
+            NSLog(@"reload albums");
             [self performSelectorOnMainThread:@selector(reloadTableView) withObject:nil waitUntilDone:YES];
         };
+
+
+
         
         // Group Enumerator Failure Block
-        void (^assetGroupEnumberatorFailure)(NSError *) = ^(NSError *error) {
+        void (^assetGroupEnumeratorFailure)(NSError *) = ^(NSError *error) {
             
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"Album Error: %@ - %@", [error localizedDescription], [error localizedRecoverySuggestion]] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Information" message:[NSString stringWithFormat:@"Please enable location services from device settings."] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert show];
             [alert release];
             
-            NSLog(@"A problem occured %@", [error description]);	                                 
+            NSLog(@"A problem occured %@", [error description]);	 
+            NSLog(@"localizedDescription %@", [error localizedDescription]);
+            NSLog(@"localizedRecoverySuggestion %@", [error localizedRecoverySuggestion]);
+            
         };	
-                
-        // Enumerate Albums
-        [library enumerateGroupsWithTypes:ALAssetsGroupAll
+        
+
+        
+        [library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
                                usingBlock:assetGroupEnumerator 
-                             failureBlock:assetGroupEnumberatorFailure];
+                             failureBlock:assetGroupEnumeratorFailure];
+
+                
+        //        // Enumerate Albums
+        [library enumerateGroupsWithTypes:ALAssetsGroupAlbum
+                               usingBlock:assetGroupEnumerator 
+                             failureBlock:assetGroupEnumeratorFailure];
+        
+     
+
         
         [pool release];
-    });    
+    });  
+    
+
+//   
 }
 
 -(void)reloadTableView {
-	
+	NSLog(@"reloadTableView");
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name"
+                                                  ascending:YES];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    [sortDescriptor release];
+    self.assetGroups = [NSMutableArray arrayWithArray:[self.assetGroups sortedArrayUsingDescriptors:sortDescriptors]];
+    
 	[self.tableView reloadData];
 	[self.navigationItem setTitle:@"Select an Album"];
+
+    [self loadLastViewdAlbum];
+}
+
+- (void)loadLastViewdAlbum{
+    if (!albumLoaded) {
+        NSString *lastViewedAlbum = [[NSUserDefaults standardUserDefaults] valueForKey:@"album"];
+        if ([lastViewedAlbum length] > 0) {
+            int row = [lastViewedAlbum intValue];
+            if (row < [self.assetGroups count]) {
+                ELCAssetTablePicker *picker = [[ELCAssetTablePicker alloc] initWithNibName:@"ELCAssetTablePicker" bundle:[NSBundle mainBundle]];
+                picker.parent = self;
+                // Move me    
+                NSMutableDictionary *dic = [self.assetGroups objectAtIndex:row];
+                picker.assetGroup = [dic valueForKey:@"group"];
+                [picker.assetGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
+                [self.navigationController pushViewController:picker animated:NO];
+                albumLoaded = TRUE;
+                [picker release];
+            }
+        }
+    }
+
 }
 
 -(void)selectedAssets:(NSArray*)_assets {
@@ -106,12 +178,15 @@
     }
     
     // Get count
-    ALAssetsGroup *g = (ALAssetsGroup*)[assetGroups objectAtIndex:indexPath.row];
+    NSMutableDictionary *dic = [assetGroups objectAtIndex:indexPath.row];
+    ALAssetsGroup *g = (ALAssetsGroup*)[dic valueForKey:@"group"];
     [g setAssetsFilter:[ALAssetsFilter allPhotos]];
+    
+//    DLog(@"%@",[g valueForProperty:ALAssetsGroupPropertyPersistentID]);
     NSInteger gCount = [g numberOfAssets];
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",[g valueForProperty:ALAssetsGroupPropertyName], gCount];
-    [cell.imageView setImage:[UIImage imageWithCGImage:[(ALAssetsGroup*)[assetGroups objectAtIndex:indexPath.row] posterImage]]];
+    [cell.imageView setImage:[UIImage imageWithCGImage:[g posterImage]]];
 	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 	
     return cell;
@@ -125,9 +200,13 @@
 	ELCAssetTablePicker *picker = [[ELCAssetTablePicker alloc] initWithNibName:@"ELCAssetTablePicker" bundle:[NSBundle mainBundle]];
 	picker.parent = self;
 
-    // Move me    
-    picker.assetGroup = [assetGroups objectAtIndex:indexPath.row];
+    // Move me   
+    NSMutableDictionary *dic = [assetGroups objectAtIndex:indexPath.row];
+    picker.assetGroup = [dic valueForKey:@"group"];
     [picker.assetGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
+    
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d",indexPath.row] forKey:@"album"];
     
 	[self.navigationController pushViewController:picker animated:YES];
 	[picker release];

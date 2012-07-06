@@ -12,6 +12,8 @@
 #import "ELCAssetTablePicker.h"
 #import "ELCAlbumPickerController.h"
 
+
+
 @implementation ELCImagePickerController
 
 @synthesize delegate;
@@ -37,7 +39,7 @@
 		
 		[workingDictionary release];	
 	}
-	
+
     [self popToRootViewControllerAnimated:NO];
     [[self parentViewController] dismissModalViewControllerAnimated:YES];
     

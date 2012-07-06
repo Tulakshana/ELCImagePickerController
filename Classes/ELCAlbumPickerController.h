@@ -15,6 +15,8 @@
 	id parent;
     
     ALAssetsLibrary *library;
+    
+    BOOL albumLoaded;
 }
 
 @property (nonatomic, assign) id parent;

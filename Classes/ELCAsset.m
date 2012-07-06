@@ -8,6 +8,8 @@
 #import "ELCAsset.h"
 #import "ELCAssetTablePicker.h"
 
+
+
 @implementation ELCAsset
 
 @synthesize asset;
@@ -46,7 +48,7 @@
 -(void)toggleSelection {
     
 	overlayView.hidden = !overlayView.hidden;
-    
+//    
 //    if([(ELCAssetTablePicker*)self.parent totalSelectedAssets] >= 10) {
 //        
 //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Maximum Reached" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
@@ -55,6 +57,17 @@
 //
 //        [(ELCAssetTablePicker*)self.parent doneAction:nil];
 //    }
+    int totalAssets = [(ELCAssetTablePicker*)self.parent totalSelectedAssets];
+    NSLog(@"totalSelectedAssets %d",totalAssets);
+    if(totalAssets <= 15) {
+        
+//        overlayView.hidden = !overlayView.hidden;
+        [(ELCAssetTablePicker*)self.parent setTitle:[NSString stringWithFormat:@"%d more",(15 - totalAssets)]];
+
+    }else {
+        overlayView.hidden = TRUE;
+    }
+    
 }
 
 -(BOOL)selected {

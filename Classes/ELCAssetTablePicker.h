@@ -18,6 +18,9 @@
 	id parent;
 	
 	NSOperationQueue *queue;
+    
+    UIView *activityHolderView;
+    UIActivityIndicatorView *activityView;
 }
 
 @property (nonatomic, assign) id parent;
