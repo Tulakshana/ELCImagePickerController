@@ -25,90 +25,98 @@
 	
 	[self.navigationItem setTitle:@"Loading..."];
     
-
+    
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self.parent action:@selector(cancelImagePicker)];
 	[self.navigationItem setRightBarButtonItem:cancelButton];
 	[cancelButton release];
-
+    
     NSMutableArray *tempArray = [[NSMutableArray alloc] init];
 	self.assetGroups = tempArray;
     [tempArray release];
     
     library = [[ALAssetsLibrary alloc] init];      
-
+    
     // Load Albums into assetGroups
     dispatch_async(dispatch_get_main_queue(), ^
-    {
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        
-        
-        
-        // Group enumerator Block
-        void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
-        {
-            if (group == nil) 
-            {
+                   {
+                       NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+                       
+                       
+                       
+                       // Group enumerator Block
+                       void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
+                       {
+                           if (group == nil) 
+                           {
+                               
+                               // Reload albums
+                               
+                               return;
+                           }
+                           NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:2];
+                           [dic setObject:group forKey:@"group"];
+                           NSString *name = [[group valueForProperty:ALAssetsGroupPropertyName] lowercaseString];
+                           if ([name isEqualToString:@"saved photos"]) {
+                               name = @"-4";
+                           }else if ([name isEqualToString:@"camera roll"]){
+                               name = @"-3";
+                           }else if ([name isEqualToString:@"photo stream"]){
+                               name = @"-2";
+                           }else if ([name isEqualToString:@"photo library"]){
+                               name = @"-1";
+                           }else {
+                               name = [NSString stringWithFormat:@"0%@",name];
+                           }
+                           [dic setObject:name forKey:@"name"];
+                           [self.assetGroups addObject:dic];
+                           [dic release];
+                           
+                           NSLog(@"reload albums");
+                           [self performSelectorOnMainThread:@selector(reloadTableView) withObject:nil waitUntilDone:YES];
+                       };
+                       
+                       
+                       
+                       
+                       // Group Enumerator Failure Block
+                       void (^assetGroupEnumeratorFailure)(NSError *) = ^(NSError *error) {
+                           
+                           UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Information" message:[NSString stringWithFormat:@"Please enable location services from device settings."] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                           [alert show];
+                           [alert release];
+                           
+                           NSLog(@"A problem occured %@", [error description]);	 
+                           NSLog(@"localizedDescription %@", [error localizedDescription]);
+                           NSLog(@"localizedRecoverySuggestion %@", [error localizedRecoverySuggestion]);
 
-                // Reload albums
-
-                return;
-            }
-            NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:2];
-            [dic setObject:group forKey:@"group"];
-            NSString *name = [[group valueForProperty:ALAssetsGroupPropertyName] lowercaseString];
-            if ([name isEqualToString:@"saved photos"]) {
-                name = @"-3";
-            }else if ([name isEqualToString:@"camera roll"]){
-                name = @"-2";
-            }else if ([name isEqualToString:@"photo library"]){
-                name = @"-1";
-            }else {
-                name = [NSString stringWithFormat:@"0%@",name];
-            }
-            [dic setObject:name forKey:@"name"];
-            [self.assetGroups addObject:dic];
-            [dic release];
-
-            NSLog(@"reload albums");
-            [self performSelectorOnMainThread:@selector(reloadTableView) withObject:nil waitUntilDone:YES];
-        };
-
-
-
-        
-        // Group Enumerator Failure Block
-        void (^assetGroupEnumeratorFailure)(NSError *) = ^(NSError *error) {
-            
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Information" message:[NSString stringWithFormat:@"Please enable location services from device settings."] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-            [alert show];
-            [alert release];
-            
-            NSLog(@"A problem occured %@", [error description]);	 
-            NSLog(@"localizedDescription %@", [error localizedDescription]);
-            NSLog(@"localizedRecoverySuggestion %@", [error localizedRecoverySuggestion]);
-            
-        };	
-        
-
-        
-        [library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
-                               usingBlock:assetGroupEnumerator 
-                             failureBlock:assetGroupEnumeratorFailure];
-
-                
-        //        // Enumerate Albums
-        [library enumerateGroupsWithTypes:ALAssetsGroupAlbum
-                               usingBlock:assetGroupEnumerator 
-                             failureBlock:assetGroupEnumeratorFailure];
-        
-     
-
-        
-        [pool release];
-    });  
+                           
+                       };	
+                       
+                       //        [library enumerateGroupsWithTypes:ALAssetsGroupAlbum
+                       //                               usingBlock:assetGroupEnumerator 
+                       //                             failureBlock:assetGroupEnumeratorFailure];
+                       //
+                       //        
+                       //        [library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+                       //                               usingBlock:assetGroupEnumerator 
+                       //                             failureBlock:assetGroupEnumeratorFailure];
+                       
+                       [library enumerateGroupsWithTypes:ALAssetsGroupAll
+                                              usingBlock:assetGroupEnumerator 
+                                            failureBlock:assetGroupEnumeratorFailure];
+                       
+                       
+                       //        // Enumerate Albums
+                       
+                       
+                       
+                       
+                       
+                       [pool release];
+                   });  
     
-
-//   
+    
+    //   
 }
 
 -(void)reloadTableView {
