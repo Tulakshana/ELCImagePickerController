@@ -50,7 +50,8 @@
                            {
                                
                                // Reload albums
-                               
+                               NSLog(@"reload albums");
+                               [self performSelectorOnMainThread:@selector(reloadTableView) withObject:nil waitUntilDone:YES];
                                return;
                            }
                            NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithCapacity:2];
@@ -71,8 +72,7 @@
                            [self.assetGroups addObject:dic];
                            [dic release];
                            
-                           NSLog(@"reload albums");
-                           [self performSelectorOnMainThread:@selector(reloadTableView) withObject:nil waitUntilDone:YES];
+
                        };
                        
                        
