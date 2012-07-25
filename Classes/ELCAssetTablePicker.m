@@ -31,10 +31,11 @@
 	[self.navigationItem setRightBarButtonItem:doneButtonItem];
 	[self.navigationItem setTitle:@"Loading..."];
 
-	[self performSelectorInBackground:@selector(preparePhotos) withObject:nil];
-    
-    // Show partial while full list loads
-	[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:.5];
+//	[self performSelectorInBackground:@selector(preparePhotos) withObject:nil];
+//    
+//    // Show partial while full list loads
+//	[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:.5];
+    [self preparePhotos];
     
     activityView = nil;
     activityHolderView = nil;
@@ -46,9 +47,10 @@
 
 -(void)preparePhotos {
     
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+//    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	
+    NSThread *progressThread = [[NSThread alloc]initWithTarget:self selector:@selector(showProgress) object:nil];
+    [progressThread start];
     NSLog(@"enumerating photos");
 //    void (^enumerateAsset)(ALAsset *, NSUInteger , BOOL *) = ^(ALAsset *result, NSUInteger index, BOOL *stop){
 //        if(result == nil) 
@@ -76,10 +78,14 @@
     NSLog(@"done enumerating photos");
 	
 	[self.tableView reloadData];
-//    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:([self.tableView numberOfRowsInSection:0] - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:TRUE];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:([self.tableView numberOfRowsInSection:0] - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:FALSE];
 	[self.navigationItem setTitle:@"Pick Photos"];
+    
+    [progressThread release];
+    [activityView stopAnimating];
+    [activityHolderView removeFromSuperview];
 
-    [pool release];
+//    [pool release];
 
 }
 

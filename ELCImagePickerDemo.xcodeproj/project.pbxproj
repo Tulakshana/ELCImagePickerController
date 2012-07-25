@@ -29,6 +29,8 @@
 		8FBE5DA2131DC988001603C7 /* Overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FBE5D97131DC988001603C7 /* Overlay.png */; };
 		8FBE5DA3131DC988001603C7 /* Overlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FBE5D98131DC988001603C7 /* Overlay@2x.png */; };
 		E29A5E3C1239C42A008BB149 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E29A5E3B1239C42A008BB149 /* AssetsLibrary.framework */; };
+		F52D4DDF15BFB7CA00D40B11 /* loadingBack.png in Resources */ = {isa = PBXBuildFile; fileRef = F52D4DDD15BFB7CA00D40B11 /* loadingBack.png */; };
+		F52D4DE015BFB7CA00D40B11 /* loadingBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F52D4DDE15BFB7CA00D40B11 /* loadingBack@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +66,8 @@
 		8FBE5D97131DC988001603C7 /* Overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Overlay.png; sourceTree = "<group>"; };
 		8FBE5D98131DC988001603C7 /* Overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Overlay@2x.png"; sourceTree = "<group>"; };
 		E29A5E3B1239C42A008BB149 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		F52D4DDD15BFB7CA00D40B11 /* loadingBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = loadingBack.png; path = Resources/loadingBack.png; sourceTree = "<group>"; };
+		F52D4DDE15BFB7CA00D40B11 /* loadingBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "loadingBack@2x.png"; path = "Resources/loadingBack@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +130,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F52D4DDD15BFB7CA00D40B11 /* loadingBack.png */,
+				F52D4DDE15BFB7CA00D40B11 /* loadingBack@2x.png */,
 				83C6BC9514476B280064D71D /* elc-ios-icon@2x.png */,
 				83C6BC9614476B280064D71D /* elc-ios-icon.png */,
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
@@ -239,6 +245,8 @@
 				8FBE5DA3131DC988001603C7 /* Overlay@2x.png in Resources */,
 				83C6BC9714476B280064D71D /* elc-ios-icon@2x.png in Resources */,
 				83C6BC9814476B280064D71D /* elc-ios-icon.png in Resources */,
+				F52D4DDF15BFB7CA00D40B11 /* loadingBack.png in Resources */,
+				F52D4DE015BFB7CA00D40B11 /* loadingBack@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
