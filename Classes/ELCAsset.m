@@ -12,7 +12,7 @@
 
 @implementation ELCAsset
 
-@synthesize asset;
+@synthesize asset = _asset;
 @synthesize parent;
 
 - (id)initWithFrame:(CGRect)frame {
@@ -22,17 +22,17 @@
     return self;
 }
 
--(id)initWithAsset:(ALAsset*)_asset {
+-(id)initWithAsset:(ALAsset*)value {
 	
 	if (self = [super initWithFrame:CGRectMake(0, 0, 0, 0)]) {
 		
-		self.asset = _asset;
+		self.asset = value;
 		
 		CGRect viewFrames = CGRectMake(0, 0, 75, 75);
 		
 		UIImageView *assetImageView = [[UIImageView alloc] initWithFrame:viewFrames];
 		[assetImageView setContentMode:UIViewContentModeScaleToFill];
-		[assetImageView setImage:[UIImage imageWithCGImage:[self.asset thumbnail]]];
+		[assetImageView setImage:[UIImage imageWithCGImage:[_asset thumbnail]]];
 		[self addSubview:assetImageView];
 		[assetImageView release];
 		
@@ -82,7 +82,7 @@
 
 - (void)dealloc 
 {    
-    self.asset = nil;
+    [_asset release];
 	[overlayView release];
     [super dealloc];
 }

@@ -10,7 +10,7 @@
 
 @interface ELCAlbumPickerController : UITableViewController {
 	
-	NSMutableArray *assetGroups;
+	NSMutableArray *_assetGroups;
 	NSOperationQueue *queue;
 	id parent;
     

@@ -10,7 +10,7 @@
 
 
 @interface ELCAsset : UIView {
-	ALAsset *asset;
+	ALAsset *_asset;
 	UIImageView *overlayView;
 	BOOL selected;
 	id parent;
@@ -19,7 +19,7 @@
 @property (nonatomic, retain) ALAsset *asset;
 @property (nonatomic, assign) id parent;
 
--(id)initWithAsset:(ALAsset*)_asset;
+-(id)initWithAsset:(ALAsset*)value;
 -(BOOL)selected;
 
 @end

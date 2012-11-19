@@ -14,8 +14,7 @@
 @implementation ELCAssetTablePicker
 
 @synthesize parent;
-@synthesize selectedAssetsLabel;
-@synthesize assetGroup, elcAssets;
+@synthesize assetGroup, elcAssets = _elcAssets;
 
 -(void)viewDidLoad {
         
@@ -61,7 +60,7 @@
         
         ELCAsset *elcAsset = [[[ELCAsset alloc] initWithAsset:result] autorelease];
         [elcAsset setParent:self];
-        [self.elcAssets addObject:elcAsset];
+        [_elcAssets addObject:elcAsset];
         
     };
     [self.assetGroup enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:enumerateAsset];
@@ -74,7 +73,7 @@
     
 	NSMutableArray *selectedAssetsImages = [[[NSMutableArray alloc] init] autorelease];
 	    
-	for(ELCAsset *elcAsset in self.elcAssets) 
+	for(ELCAsset *elcAsset in _elcAssets)
     {		
 		if([elcAsset selected]) {
 			
@@ -130,33 +129,33 @@
     
 	// NSLog(@"Getting assets for %d to %d with array count %d", index, maxIndex, [assets count]);
     
-	if(maxIndex < [self.elcAssets count]) {
+	if(maxIndex < [_elcAssets count]) {
         
-		return [NSArray arrayWithObjects:[self.elcAssets objectAtIndex:index],
-				[self.elcAssets objectAtIndex:index+1],
-				[self.elcAssets objectAtIndex:index+2],
-				[self.elcAssets objectAtIndex:index+3],
+		return [NSArray arrayWithObjects:[_elcAssets objectAtIndex:index],
+				[_elcAssets objectAtIndex:index+1],
+				[_elcAssets objectAtIndex:index+2],
+				[_elcAssets objectAtIndex:index+3],
 				nil];
 	}
     
-	else if(maxIndex-1 < [self.elcAssets count]) {
+	else if(maxIndex-1 < [_elcAssets count]) {
         
-		return [NSArray arrayWithObjects:[self.elcAssets objectAtIndex:index],
-				[self.elcAssets objectAtIndex:index+1],
-				[self.elcAssets objectAtIndex:index+2],
+		return [NSArray arrayWithObjects:[_elcAssets objectAtIndex:index],
+				[_elcAssets objectAtIndex:index+1],
+				[_elcAssets objectAtIndex:index+2],
 				nil];
 	}
     
-	else if(maxIndex-2 < [self.elcAssets count]) {
+	else if(maxIndex-2 < [_elcAssets count]) {
         
-		return [NSArray arrayWithObjects:[self.elcAssets objectAtIndex:index],
-				[self.elcAssets objectAtIndex:index+1],
+		return [NSArray arrayWithObjects:[_elcAssets objectAtIndex:index],
+				[_elcAssets objectAtIndex:index+1],
 				nil];
 	}
     
-	else if(maxIndex-3 < [self.elcAssets count]) {
+	else if(maxIndex-3 < [_elcAssets count]) {
         
-		return [NSArray arrayWithObject:[self.elcAssets objectAtIndex:index]];
+		return [NSArray arrayWithObject:[_elcAssets objectAtIndex:index]];
 	}
     
 	return nil;
@@ -190,7 +189,7 @@
     
     int count = 0;
     
-    for(ELCAsset *asset in self.elcAssets) 
+    for(ELCAsset *asset in _elcAssets)
     {
 		if([asset selected]) 
         {            
@@ -203,7 +202,7 @@
 
 - (void)dealloc 
 {
-    [elcAssets release];
+    [_elcAssets release];
     [selectedAssetsLabel release];
     activityView = nil;
     activityHolderView = nil;

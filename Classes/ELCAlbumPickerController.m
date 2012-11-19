@@ -13,7 +13,7 @@
 
 @implementation ELCAlbumPickerController
 
-@synthesize parent, assetGroups;
+@synthesize parent, assetGroups = _assetGroups;
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -69,7 +69,7 @@
                                name = [NSString stringWithFormat:@"0%@",name];
                            }
                            [dic setObject:name forKey:@"name"];
-                           [self.assetGroups addObject:dic];
+                           [_assetGroups addObject:dic];
                            [dic release];
                            
 
@@ -126,7 +126,7 @@
                                                   ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     [sortDescriptor release];
-    self.assetGroups = [NSMutableArray arrayWithArray:[self.assetGroups sortedArrayUsingDescriptors:sortDescriptors]];
+    self.assetGroups = [NSMutableArray arrayWithArray:[_assetGroups sortedArrayUsingDescriptors:sortDescriptors]];
     
 	[self.tableView reloadData];
 	[self.navigationItem setTitle:@"Select an Album"];
@@ -139,11 +139,11 @@
         NSString *lastViewedAlbum = [[NSUserDefaults standardUserDefaults] valueForKey:@"album"];
         if ([lastViewedAlbum length] > 0) {
             int row = [lastViewedAlbum intValue];
-            if (row < [self.assetGroups count]) {
+            if (row < [_assetGroups count]) {
                 ELCAssetTablePicker *picker = [[ELCAssetTablePicker alloc] initWithNibName:@"ELCAssetTablePicker" bundle:[NSBundle mainBundle]];
                 picker.parent = self;
                 // Move me    
-                NSMutableDictionary *dic = [self.assetGroups objectAtIndex:row];
+                NSMutableDictionary *dic = [_assetGroups objectAtIndex:row];
                 picker.assetGroup = [dic valueForKey:@"group"];
                 [picker.assetGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
                 [self.navigationController pushViewController:picker animated:NO];
@@ -171,7 +171,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [assetGroups count];
+    return [_assetGroups count];
 }
 
 
@@ -186,7 +186,7 @@
     }
     
     // Get count
-    NSMutableDictionary *dic = [assetGroups objectAtIndex:indexPath.row];
+    NSMutableDictionary *dic = [_assetGroups objectAtIndex:indexPath.row];
     ALAssetsGroup *g = (ALAssetsGroup*)[dic valueForKey:@"group"];
     [g setAssetsFilter:[ALAssetsFilter allPhotos]];
     
@@ -209,7 +209,7 @@
 	picker.parent = self;
 
     // Move me   
-    NSMutableDictionary *dic = [assetGroups objectAtIndex:indexPath.row];
+    NSMutableDictionary *dic = [_assetGroups objectAtIndex:indexPath.row];
     picker.assetGroup = [dic valueForKey:@"group"];
     [picker.assetGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
     
@@ -243,7 +243,7 @@
 
 - (void)dealloc 
 {	
-    [assetGroups release];
+    [_assetGroups release];
     [library release];
     [super dealloc];
 }

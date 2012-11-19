@@ -31,6 +31,7 @@
 		E29A5E3C1239C42A008BB149 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E29A5E3B1239C42A008BB149 /* AssetsLibrary.framework */; };
 		F52D4DDF15BFB7CA00D40B11 /* loadingBack.png in Resources */ = {isa = PBXBuildFile; fileRef = F52D4DDD15BFB7CA00D40B11 /* loadingBack.png */; };
 		F52D4DE015BFB7CA00D40B11 /* loadingBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F52D4DDE15BFB7CA00D40B11 /* loadingBack@2x.png */; };
+		F5C70BBC165A284E0049E973 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C70BBB165A284D0049E973 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +69,7 @@
 		E29A5E3B1239C42A008BB149 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		F52D4DDD15BFB7CA00D40B11 /* loadingBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = loadingBack.png; path = Resources/loadingBack.png; sourceTree = "<group>"; };
 		F52D4DDE15BFB7CA00D40B11 /* loadingBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "loadingBack@2x.png"; path = "Resources/loadingBack@2x.png"; sourceTree = "<group>"; };
+		F5C70BBB165A284D0049E973 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				F5C70BBB165A284D0049E973 /* Default-568h@2x.png */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -247,6 +250,7 @@
 				83C6BC9814476B280064D71D /* elc-ios-icon.png in Resources */,
 				F52D4DDF15BFB7CA00D40B11 /* loadingBack.png in Resources */,
 				F52D4DE015BFB7CA00D40B11 /* loadingBack@2x.png in Resources */,
+				F5C70BBC165A284E0049E973 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

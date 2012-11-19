@@ -13,7 +13,7 @@
 
 @implementation ELCImagePickerDemoViewController
 
-@synthesize scrollview;
+
 
 -(IBAction)launchController {
 	
@@ -23,16 +23,18 @@
 	[elcPicker setDelegate:self];
     
     ELCImagePickerDemoAppDelegate *app = (ELCImagePickerDemoAppDelegate *)[[UIApplication sharedApplication] delegate];
-	[app.viewController presentModalViewController:elcPicker animated:YES];
+    [app.viewController presentViewController:elcPicker animated:TRUE completion:nil];
+//	[app.viewController presentModalViewController:elcPicker animated:YES];
     [elcPicker release];
     [albumController release];
+    
 }
 
 #pragma mark ELCImagePickerControllerDelegate Methods
 
 - (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info {
-	
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
+//	[self dismissModalViewControllerAnimated:YES];
 	
     for (UIView *v in [scrollview subviews]) {
         [v removeFromSuperview];
@@ -58,8 +60,8 @@
 }
 
 - (void)elcImagePickerControllerDidCancel:(ELCImagePickerController *)picker {
-
-	[self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
+//	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

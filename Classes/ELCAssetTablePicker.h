@@ -12,7 +12,7 @@
 {
 	ALAssetsGroup *assetGroup;
 	
-	NSMutableArray *elcAssets;
+	NSMutableArray *_elcAssets;
 	int selectedAssets;
 	
 	id parent;
@@ -21,12 +21,13 @@
     
     UIView *activityHolderView;
     UIActivityIndicatorView *activityView;
+    
+    IBOutlet UILabel *selectedAssetsLabel;
 }
 
 @property (nonatomic, assign) id parent;
 @property (nonatomic, assign) ALAssetsGroup *assetGroup;
 @property (nonatomic, retain) NSMutableArray *elcAssets;
-@property (nonatomic, retain) IBOutlet UILabel *selectedAssetsLabel;
 
 -(int)totalSelectedAssets;
 -(void)preparePhotos;

@@ -10,7 +10,7 @@
 
 @implementation ELCAssetCell
 
-@synthesize rowAssets;
+@synthesize rowAssets = _rowAssets;
 
 -(id)initWithAssets:(NSArray*)_assets reuseIdentifier:(NSString*)_identifier {
     
@@ -36,7 +36,7 @@
     
 	CGRect frame = CGRectMake(4, 2, 75, 75);
 	
-	for(ELCAsset *elcAsset in self.rowAssets) {
+	for(ELCAsset *elcAsset in _rowAssets) {
 		
 		[elcAsset setFrame:frame];
 		[elcAsset addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:elcAsset action:@selector(toggleSelection)] autorelease]];
@@ -48,7 +48,7 @@
 
 -(void)dealloc 
 {
-	[rowAssets release];
+	[_rowAssets release];
     
 	[super dealloc];
 }

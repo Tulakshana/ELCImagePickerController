@@ -14,7 +14,6 @@
 	IBOutlet UIScrollView *scrollview;
 }
 
-@property (nonatomic, retain) IBOutlet UIScrollView *scrollview;
 
 -(IBAction)launchController;
 

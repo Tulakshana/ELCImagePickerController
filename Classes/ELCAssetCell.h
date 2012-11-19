@@ -10,7 +10,7 @@
 
 @interface ELCAssetCell : UITableViewCell
 {
-	NSArray *rowAssets;
+	NSArray *_rowAssets;
 }
 
 -(id)initWithAssets:(NSArray*)_assets reuseIdentifier:(NSString*)_identifier;
