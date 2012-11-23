@@ -63,6 +63,8 @@
         
 //        overlayView.hidden = !overlayView.hidden;
         [(ELCAssetTablePicker*)self.parent setTitle:[NSString stringWithFormat:@"%d more",(15 - totalAssets)]];
+        [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%d",row] forKey:@"ELCrow"];
+        [[NSUserDefaults standardUserDefaults]synchronize];
 
     }else {
         overlayView.hidden = TRUE;
@@ -85,6 +87,10 @@
     [_asset release];
 	[overlayView release];
     [super dealloc];
+}
+
+- (void)setRow:(int)value{
+    row = value;
 }
 
 @end

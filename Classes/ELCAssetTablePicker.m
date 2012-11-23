@@ -54,7 +54,11 @@
             [self.navigationItem setTitle:@"Pick Photos"];
             
             [self.tableView reloadData];
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:([self.tableView numberOfRowsInSection:0] - 1) inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:FALSE];
+            int row = [[[NSUserDefaults standardUserDefaults]valueForKey:@"ELCrow"]intValue];
+            if (row < [self.tableView numberOfRowsInSection:0]) {
+                            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:FALSE];
+            }
+
             return;
         }
         
@@ -176,6 +180,8 @@
     {		
 		[cell setAssets:[self assetsForIndexPath:indexPath]];
 	}
+    
+    [cell setRow:indexPath.row];
     
     return cell;
 }

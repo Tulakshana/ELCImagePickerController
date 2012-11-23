@@ -40,6 +40,7 @@
 		
 		[elcAsset setFrame:frame];
 		[elcAsset addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:elcAsset action:@selector(toggleSelection)] autorelease]];
+        [elcAsset setRow:row];
 		[self addSubview:elcAsset];
 		
 		frame.origin.x = frame.origin.x + frame.size.width + 4;
@@ -53,4 +54,7 @@
 	[super dealloc];
 }
 
+- (void)setRow:(int)value{
+    row = value;
+}
 @end

@@ -11,10 +11,12 @@
 @interface ELCAssetCell : UITableViewCell
 {
 	NSArray *_rowAssets;
+    int row;
 }
 
 -(id)initWithAssets:(NSArray*)_assets reuseIdentifier:(NSString*)_identifier;
 -(void)setAssets:(NSArray*)_assets;
+- (void)setRow:(int)value;
 
 @property (nonatomic,retain) NSArray *rowAssets;
 

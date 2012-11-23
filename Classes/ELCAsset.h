@@ -14,6 +14,7 @@
 	UIImageView *overlayView;
 	BOOL selected;
 	id parent;
+    int row;
 }
 
 @property (nonatomic, retain) ALAsset *asset;
@@ -21,5 +22,6 @@
 
 -(id)initWithAsset:(ALAsset*)value;
 -(BOOL)selected;
+- (void)setRow:(int)value;
 
 @end
